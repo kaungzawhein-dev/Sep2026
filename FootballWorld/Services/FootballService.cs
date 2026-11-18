@@ -14,11 +14,7 @@ namespace FootballWorld.Services
             _context = context;
         }
 
-        // ==========================================
-        // LEAGUE METHODS
-        // ==========================================
-
-        // GET ALL LEAGUES WITH PAGINATION AND SEARCH
+ 
 
         public async Task<LeagueListResponseModel> GetDataByPagination(
             int pageNo = 1,
@@ -57,7 +53,6 @@ namespace FootballWorld.Services
             };
         }
 
-        // GET LEAGUE CATEGORIES
 
         public async Task<LeagueCategoryResponseModel> GetCategoryList()
         {
@@ -79,7 +74,6 @@ namespace FootballWorld.Services
             };
         }
 
-        // GET LEAGUE BY ID
 
         public async Task<LeagueModel?> GetLeagueById(int id)
         {
@@ -96,11 +90,6 @@ namespace FootballWorld.Services
                 .FirstOrDefaultAsync();
         }
 
-        // ==========================================
-        // TEAM METHODS
-        // ==========================================
-
-        // GET ALL TEAMS WITH PAGINATION AND SEARCH
 
         public async Task<TeamListResponseModel> GetAllTeams(
             int pageNo = 1,
@@ -156,7 +145,6 @@ namespace FootballWorld.Services
             };
         }
 
-        // GET TEAMS BY LEAGUE ID
 
         public async Task<TeamListResponseModel> GetTeamsByLeague(
             int leagueId,
@@ -190,7 +178,6 @@ namespace FootballWorld.Services
             };
         }
 
-        // GET TEAM BY ID
 
         public async Task<TeamModel?> GetTeamById(int id)
         {
@@ -214,11 +201,6 @@ namespace FootballWorld.Services
                 .FirstOrDefaultAsync();
         }
 
-        // ==========================================
-        // PRIVATE PAGINATION METHODS
-        // ==========================================
-
-        // PAGINATE LEAGUES
 
         private async Task<List<LeagueModel>> GetLeagueByPagination(
             int pageNo,
@@ -248,7 +230,6 @@ namespace FootballWorld.Services
                 .ToListAsync();
         }
 
-        // PAGINATE TEAMS BY LEAGUE
 
         private async Task<List<TeamModel>> GetTeamsByPagination(
             int pageNo,
