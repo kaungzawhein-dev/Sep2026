@@ -56,7 +56,7 @@ namespace FootballWorld.Controllers
             return Ok(data);
         }
 
-        // POST: api/leagues
+      
         [HttpPost]
         public async Task<IActionResult> Create(League model)
         {
@@ -74,7 +74,7 @@ namespace FootballWorld.Controllers
                 result);
         }
 
-        // PUT: api/leagues/1
+    
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(
             int id, League model)
@@ -93,7 +93,7 @@ namespace FootballWorld.Controllers
             return Ok(await _service.GetLeagueById(id));
         }
 
-        // DELETE: api/leagues/1
+       
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
