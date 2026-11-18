@@ -1,0 +1,165 @@
+﻿
+using FootballWorld.Data;
+using FootballWorld.Models;
+using FootballWorld.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
+namespace FootballWorld.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class TeamsController : ControllerBase
+    {
+        private readonly FootballDbContext _context;
+        private readonly FootballService _service;
+
+        public TeamsController(
+            FootballDbContext context,
+            FootballService service)
+        {
+            _context = context;
+            _service = service;
+        }
+
+        // GET: api/teams
+        // GET: api/teams?leagueId=1
+        // GET: api/teams?pageNo=1&pageSize=10
+        // GET: api/teams?category=England
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll(
+            int? leagueId = null,
+            int pageNo = 1,
+            int pageSize = 10,
+            string? category = null)
+        {
+            if (leagueId.HasValue)
+            {
+                var result = await _service.GetTeamsByLeague(
+                    leagueId.Value,
+                    pageNo,
+                    pageSize);
+
+                return Ok(result);
+            }
+
+            var data = await _service.GetAllTeams(
+                pageNo,
+                pageSize,
+                category);
+
+            return Ok(data);
+        }
+
+        // GET: api/teams/1
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var data = await _service.GetTeamById(id);
+
+            if (data == null)
+            {
+                return NotFound("Team not found.");
+            }
+
+            return Ok(data);
+        }
+
+        // POST: api/teams
+
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] Team model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            model.Id = 0;
+            model.League = null;
+
+            bool leagueExists = await _context.Leagues
+                .AnyAsync(x => x.Id == model.LeagueId);
+
+            if (!leagueExists)
+            {
+                return BadRequest("Invalid LeagueId.");
+            }
+
+            _context.Teams.Add(model);
+
+            await _context.SaveChangesAsync();
+
+            var result = await _service.GetTeamById(model.Id);
+
+            return CreatedAtAction(
+                nameof(GetById),
+                new { id = model.Id },
+                result);
+        }
+
+        // PUT: api/teams/1
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(
+            int id,
+            [FromBody] Team model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var team = await _context.Teams.FindAsync(id);
+
+            if (team == null)
+            {
+                return NotFound("Team not found.");
+            }
+
+            bool leagueExists = await _context.Leagues
+                .AnyAsync(x => x.Id == model.LeagueId);
+
+            if (!leagueExists)
+            {
+                return BadRequest("Invalid LeagueId.");
+            }
+
+            team.LeagueId = model.LeagueId;
+            team.Name = model.Name;
+            team.Country = model.Country;
+            team.FoundedYear = model.FoundedYear;
+            team.Stadium = model.Stadium;
+            team.Manager = model.Manager;
+            team.LogoUrl = model.LogoUrl;
+            team.Description = model.Description;
+
+            await _context.SaveChangesAsync();
+
+            var result = await _service.GetTeamById(id);
+
+            return Ok(result);
+        }
+
+        // DELETE: api/teams/1
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var team = await _context.Teams.FindAsync(id);
+
+            if (team == null)
+            {
+                return NotFound("Team not found.");
+            }
+
+            _context.Teams.Remove(team);
+
+            await _context.SaveChangesAsync();
+
+            return Ok("Team deleted successfully.");
+        }
+    }
+}
