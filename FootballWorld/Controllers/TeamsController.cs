@@ -52,7 +52,6 @@ namespace FootballWorld.Controllers
             return Ok(data);
         }
 
-        // GET: api/teams/1
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
@@ -67,7 +66,6 @@ namespace FootballWorld.Controllers
             return Ok(data);
         }
 
-        // POST: api/teams
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] Team model)
@@ -100,7 +98,6 @@ namespace FootballWorld.Controllers
                 result);
         }
 
-        // PUT: api/teams/1
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(
@@ -143,7 +140,6 @@ namespace FootballWorld.Controllers
             return Ok(result);
         }
 
-        // DELETE: api/teams/1
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
